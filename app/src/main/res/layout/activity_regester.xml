@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape"
     android:orientation="vertical"
-    tools:context=".Regeter">
+    tools:context=".Regester">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -103,6 +103,7 @@
             android:text="You Have An Account ? " />
 
         <TextView
+            android:id="@+id/ButtonLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login"

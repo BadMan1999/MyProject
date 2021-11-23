@@ -96,6 +96,7 @@
             android:text="You Don't Have An Account ? " />
 
         <TextView
+            android:id="@+id/ButtonSign_UP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign UP "
