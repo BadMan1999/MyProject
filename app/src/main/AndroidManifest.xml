@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyProject">
         <activity
+            android:name=".AddRecord_activity"
+            android:exported="false" />
+        <activity
+            android:name=".Complete_Information_Activity"
+            android:exported="false" />
+        <activity
             android:name=".Regester"
             android:exported="true" />
         <activity

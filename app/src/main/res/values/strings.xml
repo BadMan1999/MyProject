@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">My project</string>
     <string name="Splash_Next"><u>Next</u></string>
+    <string name="Complete_Information_Activity"> Complete Your Information</string>
+    <string name="Gender">Gender</string>
+    <string name="Weight">Weight</string>
+    <string name="Length">Length</string>
+    <string name="DateOfBirth">DateOfBirth</string>
+    <string name="Date">Date</string>
+    <string name="Time">Time</string>
+    <string name="NewRecord">New Record</string>
 </resources>

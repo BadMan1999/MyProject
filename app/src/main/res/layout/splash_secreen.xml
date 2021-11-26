@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/ic_launcher_foreground"></ImageView>
+            android:src="@drawable/bmi"></ImageView>
 
         <TextView
             android:id="@+id/Splash_Next"
