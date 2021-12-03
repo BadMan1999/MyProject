@@ -17,15 +17,15 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_details);
 
-        Spinner spin =  findViewById(R.id.spinner);
-        spin.setOnItemSelectedListener(Add_Food_Details_Activity.this);
+        Spinner s =  findViewById(R.id.spinner);
+        s.setOnItemSelectedListener(Add_Food_Details_Activity.this);
 
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item, co);
+        ArrayAdapter a = new ArrayAdapter(this,android.R.layout.simple_spinner_item, co);
 
 
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spin.setAdapter(aa);
+        s.setAdapter(a);
     }
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
