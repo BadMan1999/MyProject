@@ -16,7 +16,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="BMI Analyzer"
+        app:title="@string/BMI_Analyze"
         app:titleMarginStart="140dp"
         app:titleTextColor="@color/white" />
 
