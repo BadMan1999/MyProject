@@ -20,10 +20,10 @@ public class Home extends AppCompatActivity {
 
 
         list = findViewById(R.id.list);
-        ArrayList<Old_Statues> models = new ArrayList<>();
-        models.add(new Old_Statues("20/1/2020","60 Kg","170 Cm"));
-        models.add(new Old_Statues("20/1/2020","60 Kg","170 Cm"));
-        models.add(new Old_Statues("20/1/2020","60 Kg","170 Cm"));
+        ArrayList<Item_Old_Statues> models = new ArrayList<>();
+        models.add(new Item_Old_Statues("20/1/2020","60 Kg","170 Cm"));
+        models.add(new Item_Old_Statues("20/1/2020","60 Kg","170 Cm"));
+        models.add(new Item_Old_Statues("20/1/2020","60 Kg","170 Cm"));
         list.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Adapter_Home(models, this);
         list.setAdapter(adapter);

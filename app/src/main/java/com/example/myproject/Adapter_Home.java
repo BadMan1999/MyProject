@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class Adapter_Home extends RecyclerView.Adapter<Adapter_Home.Holder> {
-    ArrayList<Old_Statues> AdapterIteamChaletLists;
+    ArrayList<Item_Old_Statues> AdapterIteamChaletLists;
     OnItemClickListener onItemClickListener;
     Context context;
     ViewGroup g;
@@ -24,7 +24,7 @@ public class Adapter_Home extends RecyclerView.Adapter<Adapter_Home.Holder> {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public Adapter_Home(ArrayList<Old_Statues> adapterIteamChaletLists, Context context) {
+    public Adapter_Home(ArrayList<Item_Old_Statues> adapterIteamChaletLists, Context context) {
         this.AdapterIteamChaletLists = adapterIteamChaletLists;
         this.context = context;
 
@@ -43,7 +43,7 @@ public class Adapter_Home extends RecyclerView.Adapter<Adapter_Home.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        Old_Statues A_Iteam_C = AdapterIteamChaletLists.get(position);
+        Item_Old_Statues A_Iteam_C = AdapterIteamChaletLists.get(position);
 
 
     }

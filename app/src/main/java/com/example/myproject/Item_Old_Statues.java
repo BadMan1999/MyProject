@@ -1,13 +1,13 @@
 package com.example.myproject;
 
-public class Old_Statues {
+public class Item_Old_Statues {
 
 
     String dateB;
     String w;
     String L;
 
-    public Old_Statues(String dateB, String w, String l) {
+    public Item_Old_Statues(String dateB, String w, String l) {
         this.dateB = dateB;
         this.w = w;
         L = l;
