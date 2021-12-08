@@ -61,27 +61,50 @@
 
         android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/ed_Password"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="80dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:id="@+id/ed_Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="80dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/ed_Re_Password"
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="-120dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/hidden" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="80dp"
-        android:hint="Re-Password"
-        android:inputType="textPassword"
-        android:minHeight="48dp" />
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:id="@+id/ed_Re_Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="80dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:minHeight="48dp" />
+
+
+    </LinearLayout>
 
 
     <Button
