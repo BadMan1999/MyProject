@@ -1,14 +1,42 @@
 package com.example.myproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+
+
 
 public class Regester extends AppCompatActivity {
+
+    String num_Password;
+
+
+
     TextView ButtonLogin;
+
+    EditText ed_Name, ed_Email, ed_Password,ed_Re_Password;
+    Button chaletOwnerRegister;
+    FirebaseAuth mAuth;
+    private FirebaseDatabase database;
+    private DatabaseReference rootRef;
+    String Email, Password,Uid,Name, Re_Password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +57,105 @@ public class Regester extends AppCompatActivity {
             }
         });
 
+
+
+
+
+        ed_Name = findViewById(R.id.ed_Name);
+        ed_Email = findViewById(R.id.ed_Email);
+        ed_Password = findViewById(R.id.ed_Password);
+        ed_Re_Password = findViewById(R.id.ed_Re_Password);
+
+
+
+        chaletOwnerRegister = findViewById(R.id.Creat);
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+        rootRef=database.getReference("Sweet App");
+
+
+        chaletOwnerRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                register();
+
+            }
+        });
+
+
+    }
+
+
+    private void register() {
+        Name = ed_Name.getText().toString().trim();
+        Email = ed_Email.getText().toString().trim();
+        Password = ed_Password.getText().toString().trim();
+        Re_Password = ed_Re_Password.getText().toString().trim();
+        if (Email.isEmpty()) {
+            ed_Email.setError("Please Enter Email");
+            ed_Email.requestFocus();
+            Toast.makeText(this, "Please Enter Email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Password.isEmpty()) {
+            ed_Password.setError("Please Enter Password");
+            ed_Password.requestFocus();
+            Toast.makeText(this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (Password.length() < 6) {
+            ed_Password.setError("Minimum length of password should be 6");
+            ed_Password.requestFocus();
+            Toast.makeText(this, "Minimum length of password should be 6", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Re_Password!=Password) {
+            ed_Password.setError("Re_Password not Equal Password");
+            ed_Password.requestFocus();
+            Toast.makeText(this, "Re_Password not Equal Password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (ed_Re_Password.getText().toString()==ed_Password.getText().toString()) {
+
+
+
+
+
+        }
+
+
+        mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Uid = mAuth.getCurrentUser().getUid();
+                    finish();
+                    HashMap userDetails =new HashMap();
+                    userDetails.put("Uid",Uid);
+                    userDetails.put("Name",Name);
+                    userDetails.put("Email",Email);
+                    userDetails.put("Password",Password);
+                    userDetails.put("Re-Password",ed_Re_Password);
+                    rootRef.child("Users").child(Uid).child("Details").setValue(userDetails);
+                    startActivity(new Intent(Regester.this, Login.class));
+
+
+                } else {
+
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+
+        });
 
 
     }

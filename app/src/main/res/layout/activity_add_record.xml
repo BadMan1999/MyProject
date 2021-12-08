@@ -123,7 +123,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/shape"
             android:inputType="date"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     </LinearLayout>
 
