@@ -32,7 +32,7 @@ public class Regester extends AppCompatActivity {
     TextView ButtonLogin;
 
     EditText ed_Name, ed_Email, ed_Password,ed_Re_Password;
-    Button chaletOwnerRegister;
+    Button create;
     FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference rootRef;
@@ -43,89 +43,63 @@ public class Regester extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regester);
 
+        ed_Name =findViewById(R.id.ed_Name);
+        ed_Email =findViewById(R.id.ed_Email);
+        ed_Password =findViewById(R.id.ed_Password);
+        ed_Re_Password =findViewById(R.id.ed_Re_Password);
 
+        ButtonLogin = findViewById(R.id.ButtonLogin);
+        create = findViewById(R.id.Create);
 
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        ButtonLogin=findViewById(R.id.ButtonLogin);
+        rootRef=database.getReference("BMI");
 
 
         ButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(Regester.this,Login.class);
-
+            public void onClick(View v) {
+                Intent intent = new Intent(Regester.this, Login.class);
+                startActivity(intent);
+                finish();
             }
         });
 
 
-
-
-
-        ed_Name = findViewById(R.id.ed_Name);
-        ed_Email = findViewById(R.id.ed_Email);
-        ed_Password = findViewById(R.id.ed_Password);
-        ed_Re_Password = findViewById(R.id.ed_Re_Password);
-
-
-
-        chaletOwnerRegister = findViewById(R.id.Creat);
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-
-        rootRef=database.getReference("Sweet App");
-
-
-        chaletOwnerRegister.setOnClickListener(new View.OnClickListener() {
+        create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 register();
-
             }
         });
+
+
 
 
     }
 
-
     private void register() {
-        Name = ed_Name.getText().toString().trim();
         Email = ed_Email.getText().toString().trim();
         Password = ed_Password.getText().toString().trim();
-        Re_Password = ed_Re_Password.getText().toString().trim();
+        Re_Password= ed_Re_Password.getText().toString().trim();
+        Name = ed_Name.getText().toString().trim();
         if (Email.isEmpty()) {
             ed_Email.setError("Please Enter Email");
             ed_Email.requestFocus();
             Toast.makeText(this, "Please Enter Email", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (Password.isEmpty()) {
-            ed_Password.setError("Please Enter Password");
-            ed_Password.requestFocus();
-            Toast.makeText(this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (Password.length() < 6) {
-            ed_Password.setError("Minimum length of password should be 6");
-            ed_Password.requestFocus();
-            Toast.makeText(this, "Minimum length of password should be 6", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (Re_Password!=Password) {
-            ed_Password.setError("Re_Password not Equal Password");
-            ed_Password.requestFocus();
-            Toast.makeText(this, "Re_Password not Equal Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (ed_Re_Password.getText().toString()==ed_Password.getText().toString()) {
-
-
-
+        if (Password.equals(Re_Password)) {
+            if (Password.isEmpty()) {
+                ed_Password.setError("Please Enter Password");
+                ed_Password.requestFocus();
+                Toast.makeText(this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
 
         }
-
 
         mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -133,20 +107,21 @@ public class Regester extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Uid = mAuth.getCurrentUser().getUid();
                     finish();
-                    HashMap userDetails =new HashMap();
-                    userDetails.put("Uid",Uid);
-                    userDetails.put("Name",Name);
-                    userDetails.put("Email",Email);
-                    userDetails.put("Password",Password);
-                    userDetails.put("Re-Password",ed_Re_Password);
-                    rootRef.child("Users").child(Uid).child("Details").setValue(userDetails);
-                    startActivity(new Intent(Regester.this, Login.class));
+                    HashMap tenantDetails =new HashMap();
+                    tenantDetails.put("Uid",Uid);
+                    tenantDetails.put("name",Name);
+                    tenantDetails.put("email",Email);
+                    tenantDetails.put("password",Password+"");
 
-
-                } else {
+                    Intent intent = new Intent(Regester.this, Home.class);
+                    intent.putExtra("name",Name);
+                    startActivity(intent);
+                    rootRef.child("Users").child(Uid).setValue(tenantDetails);
+                }
+                else {
 
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "You are  registered", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -156,7 +131,5 @@ public class Regester extends AppCompatActivity {
 
 
         });
-
-
     }
 }

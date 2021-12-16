@@ -55,6 +55,7 @@
             />
 
         <EditText
+            android:id="@+id/ed_Name"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,12 +91,18 @@
             />
 
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="150dp"
-            android:layout_height="24dp"
+        <EditText
+            android:id="@+id/ed_Category"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/shape3"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            android:ems="8"
+            android:gravity="center"
+            android:textColor="@color/purple_700"
+            android:textSize="18sp"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
 
     </LinearLayout>
@@ -120,6 +127,7 @@
             />
 
         <EditText
+            android:id="@+id/ed_Calory"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,6 +171,7 @@
             />
 
         <ImageView
+            android:id="@+id/img_food"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="6dp"
@@ -192,6 +201,7 @@
             />
 
         <Button
+            android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:text="Save"

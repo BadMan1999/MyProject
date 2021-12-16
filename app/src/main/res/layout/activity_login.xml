@@ -49,6 +49,7 @@
         android:layout_marginRight="80dp"
         android:hint="Username"
         android:minHeight="48dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
