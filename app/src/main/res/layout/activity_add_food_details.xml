@@ -91,18 +91,12 @@
             />
 
 
-        <EditText
-            android:id="@+id/ed_Category"
-            style="@style/Widget.AppCompat.EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+        <Spinner
+            android:id="@+id/spinner_category"
+            android:layout_width="149dp"
+            android:layout_height="25dp"
             android:background="@drawable/shape3"
-            android:ems="8"
-            android:gravity="center"
-            android:textColor="@color/purple_700"
-            android:textSize="18sp"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"/>
 
 
     </LinearLayout>
@@ -186,6 +180,7 @@
         android:gravity="center">
 
         <Button
+            android:id="@+id/btn_upload_photo"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:text="Upload Photo"

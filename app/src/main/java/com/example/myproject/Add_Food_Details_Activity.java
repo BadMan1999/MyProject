@@ -3,6 +3,7 @@ package com.example.myproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,9 +11,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
@@ -20,7 +23,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -33,68 +39,91 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
 
 
 
-    Button btn_save;
+    Button btn_save,btn_upload_photo;
     ImageView imageView;
 
 
-    private String saveCurrentDate, Name, Category, Calory;
+    private String saveCurrentDate;
+     String Name;
+     String Category;
+     String Calory;
+     String key;
+
     private static final int GalleryPick = 1;
     private Uri ImageUri;
     private String FoodRandomKey, downloadImageUrl;
     private StorageReference FoodImagesRef;
-    private DatabaseReference ProductsRef;
+    private DatabaseReference Reference;
     private ProgressDialog loadingBar;
     EditText ed_Name, ed_Category, ed_Calory;
-
+    FirebaseAuth mAuth;
 
 
     String[] co = { " Fruit "," vegetables", "Starchy food", "Dairy"};
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_details);
 
+        mAuth = FirebaseAuth.getInstance();
 
-        btn_save = (Button) findViewById(R.id.btn_save);
-        imageView = (ImageView) findViewById(R.id.img_food);
-        ed_Name = (EditText) findViewById(R.id.ed_Name);
-        ed_Category = (EditText) findViewById(R.id.ed_Category);
-        ed_Calory = (EditText) findViewById(R.id.ed_Calory);
-
-
-
-//        Spinner s =  findViewById(R.id.spinner);
-//        s.setOnItemSelectedListener(Add_Food_Details_Activity.this);
-//
-//        ArrayAdapter a = new ArrayAdapter(this,android.R.layout.simple_spinner_item, co);
-//
-//
-//        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        s.setAdapter(a);
+        FoodImagesRef = FirebaseStorage.getInstance().getReference().child("Food Images");
+        Reference = FirebaseDatabase.getInstance().getReference("BMI");
 
 
 
 
+        loadingBar = new ProgressDialog(this);
+
+
+        Spinner spin =  findViewById(R.id.spinner_category);
+        ed_Name =  findViewById(R.id.ed_Name);
+
+        ed_Calory=findViewById(R.id.ed_Calory);
+
+        btn_save =  findViewById(R.id.btn_save);
+        imageView =  findViewById(R.id.img_food);
+        btn_upload_photo =  findViewById(R.id.btn_upload_photo);
+
+        spin.setOnItemSelectedListener(Add_Food_Details_Activity.this);
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Category = spin.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,co);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(aa);
 
 
 
+        btn_upload_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OpenGallery();
+            }
+        });
 
 
-
-
-
-
-
-
-
-
-
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ValidateProductData();
+            }
+        });
 
 
 
     }
-
 
     private void OpenGallery() {
         Intent galleryIntent = new Intent();
@@ -115,29 +144,20 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
-        Toast.makeText(getApplicationContext(), co[position] , Toast.LENGTH_LONG).show();
-    }
-    @Override
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-    }
-
     private void ValidateProductData() {
         Name = ed_Name.getText().toString();
-        Category = ed_Category.getText().toString();
         Calory = ed_Calory.getText().toString();
 
 
+
         if (ImageUri == null) {
-            Toast.makeText(this, "Product image is mandatory...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Food image is mandatory...", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Name)) {
-            Toast.makeText(this, "Please write Name ...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write name...", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Category)) {
-            Toast.makeText(this, "Please write Category...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write category food...", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Calory)) {
-            Toast.makeText(this, "Please write Calory...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write calory food...", Toast.LENGTH_SHORT).show();
         } else {
             StoreProductInformation();
         }
@@ -145,22 +165,16 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
 
 
     private void StoreProductInformation() {
-        loadingBar.setTitle("Add ");
-        loadingBar.setMessage("Dear Admin, please wait while we are adding the new food.");
+        loadingBar.setTitle("Add New Food");
+        loadingBar.setMessage("Dear user, please wait while we are adding the new Food.");
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
 
-        Calendar calendar = Calendar.getInstance();
-
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
 
 
 
 
-        final StorageReference filePath = FoodImagesRef.child(ImageUri.getLastPathSegment() +  ".jpg");
+        final StorageReference filePath = FoodImagesRef.child(ImageUri.getLastPathSegment() + FoodRandomKey + ".jpg");
 
         final UploadTask uploadTask = filePath.putFile(ImageUri);
 
@@ -193,9 +207,9 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
                         if (task.isSuccessful()) {
                             downloadImageUrl = task.getResult().toString();
 
-                            Toast.makeText(Add_Food_Details_Activity.this, "got the Food image Url Successfully...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Add_Food_Details_Activity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
 
-                            SaveFoodInfoToDatabase();
+                            SaveProductInfoToDatabase();
                         }
                     }
                 });
@@ -204,27 +218,27 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
     }
 
 
-    private void SaveFoodInfoToDatabase() {
+    private void SaveProductInfoToDatabase() {
         HashMap<String, Object> ChaletMap = new HashMap<>();
-        ChaletMap.put("pid", FoodRandomKey);
-        ChaletMap.put("date", saveCurrentDate);
         ChaletMap.put("name", Name);
+        ChaletMap.put("calory", Calory+" cal /g");
         ChaletMap.put("image", downloadImageUrl);
-        ChaletMap.put("Category", Category);
-        ChaletMap.put("Calory", Calory);
+        ChaletMap.put("category", Category);
+
+        ChaletMap.put("key", key);
 
 
 
-        ProductsRef.child(FoodRandomKey).updateChildren(ChaletMap)
+        key = FirebaseDatabase.getInstance().getReference("Users").push().getKey();
+        Reference.child("Food").child(key).updateChildren(ChaletMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(Add_Food_Details_Activity.this, Home.class);
-                            startActivity(intent);
 
                             loadingBar.dismiss();
-                            Toast.makeText(Add_Food_Details_Activity.this, " added successfully..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Add_Food_Details_Activity.this, "Food is added successfully..", Toast.LENGTH_SHORT).show();
+
                         } else {
                             loadingBar.dismiss();
                             String message = task.getException().toString();
@@ -234,8 +248,13 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
                 });
     }
 
-
-
-
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+        Toast.makeText(getApplicationContext(),co[position] , Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+    }
 
 }
