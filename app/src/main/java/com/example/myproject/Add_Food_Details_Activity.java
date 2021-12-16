@@ -30,8 +30,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 
 public class Add_Food_Details_Activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -128,7 +126,9 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
     private void OpenGallery() {
         Intent galleryIntent = new Intent();
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
         galleryIntent.setType("image/*");
+
         startActivityForResult(galleryIntent, GalleryPick);
     }
 
@@ -146,25 +146,26 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
 
     private void ValidateProductData() {
         Name = ed_Name.getText().toString();
+
         Calory = ed_Calory.getText().toString();
 
 
 
         if (ImageUri == null) {
-            Toast.makeText(this, "Food image is mandatory...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Food image is Mandatory", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Name)) {
-            Toast.makeText(this, "Please write name...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write Name", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Category)) {
-            Toast.makeText(this, "Please write category food...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write Category food", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(Calory)) {
-            Toast.makeText(this, "Please write calory food...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write Calory food", Toast.LENGTH_SHORT).show();
         } else {
-            StoreProductInformation();
+            StoreFoodInformation();
         }
     }
 
 
-    private void StoreProductInformation() {
+    private void StoreFoodInformation() {
         loadingBar.setTitle("Add New Food");
         loadingBar.setMessage("Dear user, please wait while we are adding the new Food.");
         loadingBar.setCanceledOnTouchOutside(false);
@@ -207,9 +208,9 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
                         if (task.isSuccessful()) {
                             downloadImageUrl = task.getResult().toString();
 
-                            Toast.makeText(Add_Food_Details_Activity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Add_Food_Details_Activity.this, "got the Food image Url Successfully...", Toast.LENGTH_SHORT).show();
 
-                            SaveProductInfoToDatabase();
+                            SaveFoodInfoToDatabase();
                         }
                     }
                 });
@@ -218,7 +219,7 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
     }
 
 
-    private void SaveProductInfoToDatabase() {
+    private void SaveFoodInfoToDatabase() {
         HashMap<String, Object> ChaletMap = new HashMap<>();
         ChaletMap.put("name", Name);
         ChaletMap.put("calory", Calory+" cal /g");
