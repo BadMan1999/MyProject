@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -174,7 +175,7 @@ public class Complete_Information_Activity extends AppCompatActivity {
                     Map.put("date of birth", date_Of_Birth);
 
                     Reference.child("Users").child(uid).setValue(Map);
-
+                    Reference= FirebaseDatabase.getInstance().getReference().child("BMI");
                     Intent intent = new Intent(Complete_Information_Activity.this, Home.class);
                     intent.putExtra("name",name);
                     intent.putExtra("year",dateOfBirth_year+"");
