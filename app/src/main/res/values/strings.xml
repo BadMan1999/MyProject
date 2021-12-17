@@ -11,5 +11,7 @@
     <string name="Time">Time</string>
     <string name="NewRecord">New Record</string>
     <string name="logout">logout</string>
+    <string name="Male">Male</string>
+    <string name="FeMale">FeMale</string>
     <string name="Add_Food_Details">Add Food Details</string>
 </resources>
