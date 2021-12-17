@@ -52,6 +52,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_weight"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,6 +85,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_length"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,6 +119,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_date"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginLeft="100dp"
@@ -144,6 +147,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_time"
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:layout_marginLeft="100dp"
@@ -155,7 +159,8 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_save_data"
+
+        android:id="@+id/button_save_data_record"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:text="Save Data"

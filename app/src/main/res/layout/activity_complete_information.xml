@@ -49,6 +49,7 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radio_Group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
@@ -87,6 +88,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_Weight"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -119,6 +121,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_Length"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,6 +155,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:id="@+id/ed_date_Of_Birth"
             android:layout_width="180dp"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
