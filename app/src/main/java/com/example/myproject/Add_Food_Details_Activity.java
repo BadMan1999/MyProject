@@ -237,9 +237,11 @@ public class Add_Food_Details_Activity extends AppCompatActivity implements Adap
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
 
+                            Intent intent = new Intent(Add_Food_Details_Activity.this,Home.class);
+                            startActivity(intent);
                             loadingBar.dismiss();
                             Toast.makeText(Add_Food_Details_Activity.this, "Food is added successfully..", Toast.LENGTH_SHORT).show();
-
+                            finish();
                         } else {
                             loadingBar.dismiss();
                             String message = task.getException().toString();

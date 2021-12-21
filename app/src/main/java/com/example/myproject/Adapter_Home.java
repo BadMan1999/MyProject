@@ -45,6 +45,9 @@ public class Adapter_Home extends RecyclerView.Adapter<Adapter_Home.Holder> {
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Item_Old_Statues A_Iteam_C = AdapterIteamChaletLists.get(position);
 
+        holder.text_w.setText(A_Iteam_C.getW());
+        holder.text_l.setText(A_Iteam_C.getL());
+        holder.text_date.setText(A_Iteam_C.getDateB());
 
     }
 

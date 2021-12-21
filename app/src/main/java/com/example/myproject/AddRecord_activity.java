@@ -26,13 +26,14 @@ public class AddRecord_activity extends AppCompatActivity {
     private String weight,length,date,time;
 
     private DatabaseReference Reference;
-    private ProgressDialog ProgressDialog;
     FirebaseAuth mAuth;
+    String key;
 
     EditText ed_weight,ed_length,ed_date,ed_time;
 
     Button btn_save_data_record;
-    String classified, result,currentDate;
+    String classified, result;
+    int currentDate;
 
     int c1, c2;
 
@@ -44,7 +45,7 @@ public class AddRecord_activity extends AppCompatActivity {
 
         Reference = FirebaseDatabase.getInstance().getReference("BMI");
 
-        currentDate = getIntent().getExtras().getString("currentDate");
+        currentDate = getIntent().getExtras().getInt("currentDate");
 
 
 
@@ -57,7 +58,6 @@ public class AddRecord_activity extends AppCompatActivity {
 
 
 
-        ProgressDialog = new ProgressDialog(this);
 
         ed_length.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -133,20 +133,9 @@ public class AddRecord_activity extends AppCompatActivity {
         time = ed_time.getText().toString();
 
 
-        if (TextUtils.isEmpty(weight)) {
-            Toast.makeText(this, "Please write weight", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(length)) {
-            Toast.makeText(this, "Please write length", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(date)) {
-            Toast.makeText(this, "Please write date", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(time)) {
-            Toast.makeText(this, "Please write time", Toast.LENGTH_SHORT).show();
-        } else {
-            SaveRecordInfoToDatabase();
-        }
 
 
-        int AgePercent = 2021-Integer.parseInt(currentDate);
+        int AgePercent = 2021-currentDate;
 
         int Cmlength = Integer.parseInt(length);
 
@@ -166,20 +155,22 @@ public class AddRecord_activity extends AppCompatActivity {
 
         if (BMI < 18.5){
             classified = "Underweight";
-            result = classified + valuelist.get(4).toString();
+            result = classified +" "+ valuelist.get(4).toString();
 
         }else if (18.5 <= BMI && BMI < 25){
             classified = "Healthy Weight";
-            result = classified + valuelist.get(3).toString();
+            result = classified +" "+ valuelist.get(3).toString();
 
         }else if (25 <= BMI && BMI < 30){
             classified = "Overweight";
-            result = classified + valuelist.get(1).toString();
+            result = classified +" "+valuelist.get(1).toString();
         }else if (BMI > 30){
             classified = "Obesity";
-            result = classified + valuelist.get(0).toString();
+            result = classified +" "+ valuelist.get(0).toString();
 
         }
+        SaveRecordInfoToDatabase();
+
     }
 
 
@@ -194,21 +185,18 @@ public class AddRecord_activity extends AppCompatActivity {
         ChaletMap.put("curren status", result);
 
 
-
-        String key = FirebaseDatabase.getInstance().getReference("Users").push().getKey();
+         key = FirebaseDatabase.getInstance().getReference("Users").push().getKey();
         Reference.child("Record").child(key).updateChildren(ChaletMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Intent idToList = new Intent(AddRecord_activity.this, Splash_Secreen.class);
+                            Intent idToList = new Intent(AddRecord_activity.this, Home.class);
                             startActivity(idToList);
 
-                            ProgressDialog.dismiss();
                             Toast.makeText(AddRecord_activity.this, "Food is added successfully..", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            ProgressDialog.dismiss();
                             String message = task.getException().toString();
                             Toast.makeText(AddRecord_activity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                         }

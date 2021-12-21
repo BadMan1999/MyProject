@@ -1,33 +1,42 @@
 package com.example.myproject;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class Login extends AppCompatActivity {
     TextView ButtonSign_UP;
 
     FirebaseDatabase database;
-    private DatabaseReference rootReference;
 
     private EditText ed_UserName, ed_password;
     private Button button_Login;
     private FirebaseAuth mAuth;
-    String Username,Password;
+    String Username,Password ;
+    int year;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +44,6 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-         database = FirebaseDatabase.getInstance();
-
-        rootReference =database.getReference("BMI");
         ButtonSign_UP = findViewById(R.id.ButtonSign_UP);
         button_Login = findViewById(R.id.button_Login);
 
@@ -68,57 +74,72 @@ public class Login extends AppCompatActivity {
         Username= ed_UserName.getText().toString().trim();
         Password= ed_password.getText().toString().trim();
 
-        if (Username.isEmpty()) {
-            ed_UserName.setError("User Name is required");
-            ed_UserName.requestFocus();
-            return ;
-        }
 
-
-
-        if (Password.isEmpty()) {
-            ed_password.setError("Password is required");
-            ed_password.requestFocus();
-            return ;
-        }
-
-        if (Password.length() < 6) {
-            ed_password.setError("Minimum lenght of password should be 6");
-            ed_password.requestFocus();
-            return;
-        }
-
-        ValueEventListener listener = new ValueEventListener() {
+        DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference("BMI");
+        rootReference.child("Users").child(ed_UserName.getText().toString()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
+                     year = snapshot.child("year").getValue(Integer.class);
                     String pass = snapshot.child("password").getValue(String.class);
-                    String name = snapshot.child("name").getValue(String.class);
 
-                    if (pass.equals(Password)){
-                        if (name.equals(Username)){
+                    Log.d("mypass",pass);
+                    if (Password.equals(pass)){
                             Intent intent =  new Intent(Login.this,Home.class);
-                            intent.putExtra("name",name);
+                            intent.putExtra("name",Username);
+                            intent.putExtra("year",year);
                             startActivity(intent);
 
-                        }else {
-                            Toast.makeText(Login.this, "error username", Toast.LENGTH_SHORT).show();
-                        }
 
                     }else{
                         Toast.makeText(Login.this, "error password", Toast.LENGTH_SHORT).show();
                     }
+
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError Db) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                Toast.makeText(Login.this, Db.toString(), Toast.LENGTH_SHORT).show();
             }
-        };
+        });
 
-        rootReference.child("Users").child("XhjWbrIgTOdELJiiD5ttyRHXjHJ2").addListenerForSingleValueEvent(listener);
+//        rootReference.addListenerForSingleValueEvent(listener);
+
+//        ValueEventListener listener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()){
+//                    String pass = snapshot.child("password").getValue(String.class);
+//                    String name = snapshot.child("name").getValue(String.class);
+////                     email = snapshot.child("email").getValue(String.class);
+////                    Log.d("name",name);
+//
+//                    if (Password.equals(pass)){
+//                        if (Username.equals(name)){
+//                            Intent intent =  new Intent(Login.this,Home.class);
+//                            intent.putExtra("name",name);
+//                            startActivity(intent);
+//
+//                        }else {
+//                            Toast.makeText(Login.this, "error username", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }else{
+//                        Toast.makeText(Login.this, "error password", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError Db) {
+//
+//                Toast.makeText(Login.this, Db.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//
+//
+//        rootReference.addListenerForSingleValueEvent(listener);
 
     }
     @Override

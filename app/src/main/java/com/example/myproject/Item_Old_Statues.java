@@ -30,5 +30,11 @@ public class Item_Old_Statues {
     }
 
 
+    public String getDateB() {
+        return dateB;
+    }
 
+    public void setDateB(String dateB) {
+        this.dateB = dateB;
+    }
 }

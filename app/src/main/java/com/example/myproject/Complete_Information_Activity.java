@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -45,6 +49,10 @@ public class Complete_Information_Activity extends AppCompatActivity {
 
     String uid,name,email,password;
     FirebaseAuth mAuth;
+    String Xdate;
+    int Xyear;
+
+    DatePickerDialog.OnDateSetListener dateSetListener1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +60,7 @@ public class Complete_Information_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_complete_information);
 
         mAuth = FirebaseAuth.getInstance();
-
+        Reference = FirebaseDatabase.getInstance().getReference().child("BMI");
         name = getIntent().getExtras().getString("name");
         uid = getIntent().getExtras().getString("uid");
 
@@ -133,13 +141,41 @@ public class Complete_Information_Activity extends AppCompatActivity {
             }
         });
 
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
+        String date = simpleDateFormat.format(Calendar.getInstance().getTime());
+
         ed_date_Of_Birth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment date = new Date();
-                date.show(getSupportFragmentManager(), "date");
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Complete_Information_Activity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, dateSetListener1, year, month, day
+                );
+                // to set background for datepicker
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                datePickerDialog.show();
             }
         });
+
+        // it is used to set teh date which user selects
+        dateSetListener1 = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                // here month+1 is used so that
+                // actual month number can be displayed
+                // otherwise it starts from 0 and it shows
+                // 1 number less for every month
+                // example- for january month=0
+                month = month + 1;
+                 Xdate = day + "/" + month + "/" + year;
+                 ed_date_Of_Birth.setText(Xdate);
+                Xyear = year;
+
+            }
+        };
 
     }
     public void addListenerOnButton() {
@@ -157,7 +193,6 @@ public class Complete_Information_Activity extends AppCompatActivity {
 
 
     private void SaveInfoToDatabase() {
-        date_Of_Birth = ed_date_Of_Birth.getText().toString();
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -172,13 +207,16 @@ public class Complete_Information_Activity extends AppCompatActivity {
                     Map.put("gender", value);
                     Map.put("weight", c1 + " kg");
                     Map.put("length", c2 +" cm");
-                    Map.put("date of birth", date_Of_Birth);
+                    Map.put("date of birth", Xdate);
+                    Map.put("year", Xyear);
 
-                    Reference.child("Users").child(uid).setValue(Map);
+                    Reference.child("Users").child(name).setValue(Map);
                     Reference= FirebaseDatabase.getInstance().getReference().child("BMI");
                     Intent intent = new Intent(Complete_Information_Activity.this, Home.class);
                     intent.putExtra("name",name);
-                    intent.putExtra("year",dateOfBirth_year+"");
+                    intent.putExtra("year",Xyear+"");
+                    intent.putExtra("length",c2+"");
+                    intent.putExtra("weight",c1+"");
                     startActivity(intent);
 
                 }
@@ -199,14 +237,4 @@ public class Complete_Information_Activity extends AppCompatActivity {
 
     }
 
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        dateOfBirth_year = year;
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
-
-        ed_date_Of_Birth.setText(currentDateString);
-    }
 }
