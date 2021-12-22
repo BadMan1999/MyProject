@@ -29,7 +29,6 @@ import com.squareup.picasso.Picasso;
 public class Login extends AppCompatActivity {
     TextView ButtonSign_UP;
 
-    FirebaseDatabase database;
 
     private EditText ed_UserName, ed_password;
     private Button button_Login;
@@ -104,42 +103,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-//        rootReference.addListenerForSingleValueEvent(listener);
 
-//        ValueEventListener listener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()){
-//                    String pass = snapshot.child("password").getValue(String.class);
-//                    String name = snapshot.child("name").getValue(String.class);
-////                     email = snapshot.child("email").getValue(String.class);
-////                    Log.d("name",name);
-//
-//                    if (Password.equals(pass)){
-//                        if (Username.equals(name)){
-//                            Intent intent =  new Intent(Login.this,Home.class);
-//                            intent.putExtra("name",name);
-//                            startActivity(intent);
-//
-//                        }else {
-//                            Toast.makeText(Login.this, "error username", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    }else{
-//                        Toast.makeText(Login.this, "error password", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError Db) {
-//
-//                Toast.makeText(Login.this, Db.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        };
-//
-//
-//        rootReference.addListenerForSingleValueEvent(listener);
 
     }
     @Override
