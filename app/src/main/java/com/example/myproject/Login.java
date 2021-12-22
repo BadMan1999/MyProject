@@ -47,6 +47,7 @@ public class Login extends AppCompatActivity {
         button_Login = findViewById(R.id.button_Login);
 
         ed_password  =findViewById(R.id.password);
+
         ed_UserName  =findViewById(R.id.UserName);
 
 
